@@ -12,7 +12,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from challenges import (  # noqa: E402
+from src.challenges import (  # noqa: E402
     count_evidence,
     first_repeated_id,
     largest_time_gap,
@@ -167,3 +167,48 @@ def test_largest_time_gap_does_not_mutate_input() -> None:
     largest_time_gap(times)
 
     assert times == [1300, 915, 1600, 945]
+
+
+# -----------------------------------------------------------------------------
+# Student-added tests
+# -----------------------------------------------------------------------------
+
+def test_count_evidence_all_same_label() -> None:
+    assert count_evidence(["knife", "knife", "knife"]) == {"knife": 3}
+
+
+def test_count_evidence_all_unique_labels() -> None:
+    assert count_evidence(["phone", "receipt", "cash"]) == {"phone": 1, "receipt": 1, "cash": 1}
+
+
+def test_first_repeated_id_two_identical_items() -> None:
+    assert first_repeated_id(["Z99", "Z99"]) == "Z99"
+
+
+def test_first_repeated_id_returns_earlier_repeat_not_later() -> None:
+    assert first_repeated_id(["A17", "B22", "C91", "B22", "A17"]) == "B22"
+
+
+def test_valid_tags_lone_closing_bracket_is_false() -> None:
+    assert valid_tags("}") is False
+
+
+def test_valid_tags_unclosed_opening_bracket_is_false() -> None:
+    assert valid_tags("(((") is False
+
+
+def test_valid_tags_no_brackets_is_true() -> None:
+    assert valid_tags("case-A17-photo") is True
+
+
+def test_valid_tags_single_pair_is_true() -> None:
+    assert valid_tags("()") is True
+
+
+def test_lookup_alias_is_case_sensitive() -> None:
+    aliases = {"big red": "Marco Silva"}
+    assert lookup_alias(aliases, "Big Red") is None
+
+
+def test_lookup_alias_returns_value_even_if_empty_string() -> None:
+    assert lookup_alias({"Shadow": ""}, "Shadow") == ""
